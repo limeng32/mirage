@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="limeng32.testSpring.mapper.BookWriterMapper">
+<mapper namespace="limeng32.mirage.core.mapper.BookWriterMapper">
 	<cache />
 
 	<select id="select" resultMap="result">#{id}</select>
@@ -24,8 +24,8 @@
 	<resultMap id="result" type="BookWriter" autoMapping="true">
 		<id property="id" column="id" />
 		<association property="book" javaType="Book"
-			select="limeng32.testSpring.mapper.BookMapper.select" column="bookid" />
+			select="limeng32.mirage.core.mapper.BookMapper.select" column="bookid" />
 		<association property="writer" javaType="Writer"
-			select="limeng32.testSpring.mapper.WriterMapper.select" column="writerid" />
+			select="limeng32.mirage.core.mapper.WriterMapper.select" column="writerid" />
 	</resultMap>
 </mapper>

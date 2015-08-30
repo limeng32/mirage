@@ -1,16 +1,36 @@
 package limeng32.mirage.core.web;
 
+import java.util.List;
+
+import limeng32.mirage.core.pojo.Writer;
+import limeng32.mirage.core.pojo.condition.WriterCondition;
+import limeng32.mirage.core.service.WriterService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(value = "/index")
 public class testController {
 
+	@Autowired
+	private WriterService writerService;
+
 	@RequestMapping()
 	public String get() {
-		System.out.println("1");
 		return "index";
+	}
+
+	@RequestMapping(value = "testMix")
+	public String get(ModelMap mm) {
+		WriterCondition wc = new WriterCondition();
+		wc.setNameLike("王");
+		List<Writer> ret = writerService.selectAll(wc);
+		System.out.println(ret.size());
+		mm.addAttribute("_content", ret);
+		return "testController";
 	}
 
 }
