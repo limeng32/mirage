@@ -18,6 +18,14 @@
 			expression="org.springframework.stereotype.Service" />
 	</context:component-scan>
 
+	<bean id="rpe" class="limeng32.mirage.core.ResourcePathExposer"
+		init-method="init" />
+
+	<mvc:resources mapping="#{rpe.resourceRoot}/**" location="/"
+		cache-period="3153600" />
+	<mvc:default-servlet-handler />
+	<mvc:annotation-driven />
+	
 	<context:annotation-config />
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"

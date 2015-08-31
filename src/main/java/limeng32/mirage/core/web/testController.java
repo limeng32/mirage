@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping(value = "/index")
@@ -18,19 +19,19 @@ public class testController {
 	@Autowired
 	private WriterService writerService;
 
-	@RequestMapping()
+	@RequestMapping(method = RequestMethod.GET)
 	public String get() {
 		return "index";
 	}
 
-	@RequestMapping(value = "testMix")
+	@RequestMapping(value = "/testMix")
 	public String get(ModelMap mm) {
 		WriterCondition wc = new WriterCondition();
 		wc.setNameLike("王");
 		List<Writer> ret = writerService.selectAll(wc);
 		System.out.println(ret.size());
 		mm.addAttribute("_content", ret);
-		return "testController";
+		return "testController1";
 	}
 
 }
