@@ -1,6 +1,7 @@
 package limeng32.mirage.core.pojo.condition;
 
 import limeng32.mirage.core.pojo.BookWriter;
+import limeng32.mybatisPlugin.cachePlugin.Conditionable;
 import limeng32.mybatisPlugin.cachePlugin.Limitable;
 import limeng32.mybatisPlugin.cachePlugin.Queryable;
 import limeng32.mybatisPlugin.cachePlugin.Sortable;

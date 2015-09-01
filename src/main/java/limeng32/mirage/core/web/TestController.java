@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping(value = "/index")
-public class testController {
+public class TestController {
 
 	@Autowired
 	private WriterService writerService;
@@ -29,7 +29,6 @@ public class testController {
 		WriterCondition wc = new WriterCondition();
 		wc.setNameLike("王");
 		List<Writer> ret = writerService.selectAll(wc);
-		System.out.println(ret.size());
 		mm.addAttribute("_content", ret);
 		return "testController1";
 	}
