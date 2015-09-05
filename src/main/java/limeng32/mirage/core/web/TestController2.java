@@ -32,6 +32,7 @@ public class TestController2 {
 
 	@RequestMapping(value = "/testDemo")
 	public String get(ModelMap mm, PageParam pageParam) {
+		System.out.println("1");
 		int pageNo = pageParam.getPageNo() > 0 ? pageParam.getPageNo() : 1;
 		BookCondition bc = new BookCondition();
 		bc.setLimiter(new PageParam(pageNo, 5));
