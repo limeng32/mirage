@@ -14,7 +14,7 @@
                 {
                     name: 'bee-demo',
                     base: '../build',
-                    tag: "201509011434",
+                    tag: "201509061150",
                     ignorePackageNameInUri: true,
                     combine: false
                 }
@@ -24,7 +24,7 @@
 		    packages: [
 		        {
 		            name: "mypkg",
-		            tag: "201505242056",
+		            tag: "201509061150",
 		            path: "${resourceRoot}/js/kissy/module", 
 		            combine : false,
 		            charset: "utf-8"
