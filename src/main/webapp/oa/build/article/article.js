@@ -2,9 +2,10 @@ define(
 		'bee-demo/article/article',
 		[ "node", "./article-view", 'button', 'io', 'json', 'menu',
 				'separator', 'util', 'bee-demo/buttonPlus', 'event-dom',
-				'mypkg/jsonx', "kg/xtemplate/4.2.0/runtime" ],
+				'mypkg/jsonx', "kg/xtemplate/4.2.0/runtime",
+				'bee-demo/dataFrame' ],
 		function(require, exports, module) {
-			var $ = require('node').all, Node = require('node'), Util = require('util'), Menu = require('menu'), Separator = require('separator'), IO = require('io'), JSON = require('json'), BP = require('bee-demo/buttonPlus'), JSONX = require('mypkg/jsonx'), EventDom = require('event-dom'), XTemplate = require("kg/xtemplate/4.2.0/runtime");
+			var $ = require('node').all, Node = require('node'), Util = require('util'), Menu = require('menu'), Separator = require('separator'), IO = require('io'), JSON = require('json'), BP = require('bee-demo/buttonPlus'), JSONX = require('mypkg/jsonx'), EventDom = require('event-dom'), XTemplate = require("kg/xtemplate/4.2.0/runtime"), DataFrame = require('bee-demo/dataFrame');
 			module.exports = {
 				init : function() {
 					var BG = new Node('<div>').addClass('middleBanner');
@@ -148,7 +149,7 @@ define(
 						return sb;
 					}
 					IO.get('index/testDemo?_content=json', {}, function(data) {
-						//console.log(data);
+						// console.log(data);
 						data = JSONX.decode(data);
 						data.pageItems[0] == null ? demoTd.append("") : demoTd
 								.append(data.pageItems[0].title);
@@ -174,7 +175,9 @@ define(
 							demoTr3.append(demoTd3)).append(
 							demoTr4.append(demoTd4)).append(
 							demoTr5.append(demoTd5));
-					$('article').append(demoTable);
+					// $('article').append(demoTable);
+					$('article').append(DataFrame.init('index/testDemo?_content=json'));
+					console.log('test');
 					var demoPageNum = new Node('<span>').addClass('demoPage');
 					var demoPageBackward = new Node('<span>').addClass(
 							'demoPage').append("上一页");
@@ -189,7 +192,7 @@ define(
 						IO.get('index/testDemo?_content=json', {
 							pageNo : parseInt(demoPageNum.text()) - 1
 						}, function(data) {
-							//console.log(data);
+							// console.log(data);
 							data = JSONX.decode(data);
 							data.pageItems[0] == null ? demoTd.html("")
 									: demoTd.html(data.pageItems[0].title);
@@ -208,7 +211,7 @@ define(
 						IO.get('index/testDemo?_content=json', {
 							pageNo : parseInt(demoPageNum.text()) + 1
 						}, function(data) {
-							//console.log(data);
+							// console.log(data);
 							data = JSONX.decode(data);
 							data.pageItems[0] == null ? demoTd.html("")
 									: demoTd.html(data.pageItems[0].title);
