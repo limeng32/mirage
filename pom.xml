@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>limeng32</groupId>
 	<artifactId>mirage</artifactId>
-	<version>0.0.39</version>
+	<version>0.0.392</version>
 	<packaging>war</packaging>
 	<name>mirage</name>
 	<url>http://maven.apache.org</url>

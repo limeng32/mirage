@@ -1,11 +1,18 @@
-.demoTable {
+.ks-dataFrame {
 	margin-left: 200px;
+	border: 1px solid #48AFEE;
 }
 
-.demoTableDescribe {
+.ks-dataFrame td {
+	border: 1px solid #48AFEE;
+	height: 30px;
+	width: 100px;
+}
+
+.ks-dataFrame-PSpan {
 	margin-left: 150px;
 }
 
-.demoPage {
+.ks-dataFrame-PB, .ks-dataFrame-PN, .ks-dataFrame-PF {
 	margin: 5px;
 }
