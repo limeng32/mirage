@@ -3,31 +3,38 @@ define(
 		[ 'event-dom', 'util', 'mypkg/jsonx', 'io', 'node' ],
 		function(require, exports, module) {
 			var EventDom = require('event-dom'), Util = require('util'), IO = require('io'), Node = require('node'), JSONX = require('mypkg/jsonx');
-			exports.init = function(path, cssName) {
+			exports.init = function(path, cssName, frame) {
+				var detail = frame.detail;
 				var demoTable = new Node('<table>').addClass(cssName);
-				var demoTr = new Node('<tr>'), demoTr2 = new Node('<tr>'), demoTr3 = new Node(
-						'<tr>'), demoTr4 = new Node('<tr>'), demoTr5 = new Node(
-						'<tr>');
-				var demoTd = new Node('<td>'), demoTd2 = new Node('<td>'), demoTd3 = new Node(
-						'<td>'), demoTd4 = new Node('<td>'), demoTd5 = new Node(
-						'<td>');
-				demoTable.append(demoTr.append(demoTd)).append(
-						demoTr2.append(demoTd2))
-						.append(demoTr3.append(demoTd3)).append(
-								demoTr4.append(demoTd4)).append(
-								demoTr5.append(demoTd5));
+				var dataTr = new Array(frame.capacity);
+				var dataTd = new Array(frame.capacity);
+				var titleTr = new Node('<tr>');
+				var titleTd = new Array(detail.length);
+				demoTable.append(titleTr);
+				for (var i = 0; i < detail.length; i++) {
+					titleTd[i] = new Node('<td>');
+					titleTr.append(titleTd[i].html(detail[i].title));
+				}
+				for (var i = 0; i < frame.capacity; i++) {
+					dataTr[i] = new Node('<tr>');
+					demoTable.append(dataTr[i]);
+					dataTd[i] = new Array(frame.detail.length);
+					for (var j = 0; j < frame.detail.length; j++) {
+						dataTd[i][j] = new Node('<td>');
+						dataTr[i].append(dataTd[i][j]);
+					}
+				}
 				IO.get(path, {}, function(data) {
 					data = JSONX.decode(data);
-					data.pageItems[0] == null ? demoTd.append("") : demoTd
-							.append(data.pageItems[0].title);
-					data.pageItems[1] == null ? demoTd2.append("") : demoTd2
-							.append(data.pageItems[1].title);
-					data.pageItems[2] == null ? demoTd3.append("") : demoTd3
-							.append(data.pageItems[2].title);
-					data.pageItems[3] == null ? demoTd4.append("") : demoTd4
-							.append(data.pageItems[3].title);
-					data.pageItems[4] == null ? demoTd5.append("") : demoTd5
-							.append(data.pageItems[4].title);
+
+					for (var i = 0; i < frame.capacity; i++) {
+						for (var j = 0; j < detail.length; j++) {
+							data.pageItems[i] == null ? dataTd[i][j].append('')
+									: dataTd[i][j].append(detail[j]
+											.handler(data.pageItems[i]))
+						}
+					}
+
 					demoPageNum.html(data.pageNo);
 				}, 'text')
 
@@ -47,16 +54,16 @@ define(
 					}, function(data) {
 						// console.log(data);
 						data = JSONX.decode(data);
-						data.pageItems[0] == null ? demoTd.html("") : demoTd
-								.html(data.pageItems[0].title);
-						data.pageItems[1] == null ? demoTd2.html("") : demoTd2
-								.html(data.pageItems[1].title);
-						data.pageItems[2] == null ? demoTd3.html("") : demoTd3
-								.html(data.pageItems[2].title);
-						data.pageItems[3] == null ? demoTd4.html("") : demoTd4
-								.html(data.pageItems[3].title);
-						data.pageItems[4] == null ? demoTd5.html("") : demoTd5
-								.html(data.pageItems[4].title);
+						data.pageItems[0] == null ? dataTd[0][0].html('')
+								: dataTd[0][0].html(data.pageItems[0].title);
+						data.pageItems[1] == null ? dataTd[1][0].html('')
+								: dataTd[1][0].html(data.pageItems[1].title);
+						data.pageItems[2] == null ? dataTd[2][0].html('')
+								: dataTd[2][0].html(data.pageItems[2].title);
+						data.pageItems[3] == null ? dataTd[3][0].html('')
+								: dataTd[3][0].html(data.pageItems[3].title);
+						data.pageItems[4] == null ? dataTd[4][0].html('')
+								: dataTd[4][0].html(data.pageItems[4].title);
 						demoPageNum.html(data.pageNo);
 					}, 'text')
 				})
@@ -67,16 +74,16 @@ define(
 					}, function(data) {
 						// console.log(data);
 						data = JSONX.decode(data);
-						data.pageItems[0] == null ? demoTd.html("") : demoTd
-								.html(data.pageItems[0].title);
-						data.pageItems[1] == null ? demoTd2.html("") : demoTd2
-								.html(data.pageItems[1].title);
-						data.pageItems[2] == null ? demoTd3.html("") : demoTd3
-								.html(data.pageItems[2].title);
-						data.pageItems[3] == null ? demoTd4.html("") : demoTd4
-								.html(data.pageItems[3].title);
-						data.pageItems[4] == null ? demoTd5.html("") : demoTd5
-								.html(data.pageItems[4].title);
+						data.pageItems[0] == null ? dataTd[0][0].html('')
+								: dataTd[0][0].html(data.pageItems[0].title);
+						data.pageItems[1] == null ? dataTd[1][0].html('')
+								: dataTd[1][0].html(data.pageItems[1].title);
+						data.pageItems[2] == null ? dataTd[2][0].html('')
+								: dataTd[2][0].html(data.pageItems[2].title);
+						data.pageItems[3] == null ? dataTd[3][0].html('')
+								: dataTd[3][0].html(data.pageItems[3].title);
+						data.pageItems[4] == null ? dataTd[4][0].html('')
+								: dataTd[4][0].html(data.pageItems[4].title);
 						demoPageNum.html(data.pageNo);
 					}, 'text')
 				})

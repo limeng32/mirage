@@ -148,8 +148,21 @@ define(
 						}
 						return sb;
 					}
-					var dataFrame = DataFrame
-							.init('index/testDemo?_content=json', 'ks-dataFrame');
+					var dataFrame = DataFrame.init(
+							'index/testDemo?_content=json', 'ks-dataFrame', {
+								capacity : 5,
+								detail : [ {
+									title : '标题',
+									handler : function(n) {
+										return n.title;
+									}
+								}, {
+									title : 'ID',
+									handler : function(n) {
+										return n.id;
+									}
+								} ]
+							});
 					$('article').append(dataFrame.dataTable());
 					$('article').append(dataFrame.pageSpan());
 				}
