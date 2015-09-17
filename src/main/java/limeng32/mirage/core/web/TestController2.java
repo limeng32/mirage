@@ -31,10 +31,9 @@ public class TestController2 {
 	}
 
 	@RequestMapping(value = "/testDemo")
-	public String get(ModelMap mm, PageParam pageParam) {
+	public String get(ModelMap mm, PageParam pageParam, BookCondition bc) {
 		int pageNo = pageParam.getPageNo() > 0 ? pageParam.getPageNo() : 1;
-		BookCondition bc = new BookCondition();
-		bc.setLimiter(new PageParam(pageNo, 5));
+		bc.setLimiter(new PageParam(pageNo, pageParam.getPageSize()));
 		List<Book> ret = bookService.selectAll(bc);
 		Page<Book> page = new Page<>(ret, bc.getLimiter());
 		mm.addAttribute("_content", page);

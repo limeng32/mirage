@@ -16,3 +16,9 @@
 .ks-dataFrame-PB, .ks-dataFrame-PN, .ks-dataFrame-PF {
 	margin: 5px;
 }
+
+.ks-dataFrame-QB {
+	font-weight: bold;
+	width: 80px;
+	margin-left: 200px;
+}

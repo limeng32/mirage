@@ -148,9 +148,18 @@ define(
 						}
 						return sb;
 					}
+					var dataFilter = new Node('<div>').append(new Node(
+							'<input>').prop({
+						id : 'title'
+					}));
+					$('article').append(dataFilter);
+					var filter = {};
+					if ($('#title').val() != '') {
+						filter.title = $('#title').val();
+					}
 					var dataFrame = DataFrame.init(
-							'index/testDemo?_content=json', 'ks-dataFrame', {
-								capacity : 5,
+							'index/testDemo?_content=json', filter, {
+								capacity : 2,
 								detail : [ {
 									title : '标题',
 									handler : function(n) {
@@ -162,9 +171,15 @@ define(
 										return n.id;
 									}
 								} ]
-							});
+							}, 'ks-dataFrame');
 					$('article').append(dataFrame.dataTable());
 					$('article').append(dataFrame.pageSpan());
+					$('article').append(
+							dataFrame.queryButton().text('查询').addClass(
+									'ks-button').addClass('ks-button-mini')
+									.append(new Node('<img>').prop({
+										src : 'image/arrowDownUnuse.png'
+									}).addClass('oa-sorter-arrow')));
 				}
 			}
 		});

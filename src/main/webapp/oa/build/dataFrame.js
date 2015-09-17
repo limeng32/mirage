@@ -3,13 +3,16 @@ define(
 		[ 'event-dom', 'util', 'mypkg/jsonx', 'io', 'node' ],
 		function(require, exports, module) {
 			var EventDom = require('event-dom'), Util = require('util'), IO = require('io'), Node = require('node'), JSONX = require('mypkg/jsonx');
-			exports.init = function(path, cssName, frame) {
+			exports.init = function(path, filter, frame, cssName) {
 				var detail = frame.detail;
 				var demoTable = new Node('<table>').addClass(cssName);
+				var queryButton = new Node('<div>').unselectable().addClass(
+						cssName + '-QB');
 				var dataTr = new Array(frame.capacity);
 				var dataTd = new Array(frame.capacity);
 				var titleTr = new Node('<tr>');
 				var titleTd = new Array(detail.length);
+
 				demoTable.append(titleTr);
 				for (var i = 0; i < detail.length; i++) {
 					titleTd[i] = new Node('<td>');
@@ -24,18 +27,56 @@ define(
 						dataTr[i].append(dataTd[i][j]);
 					}
 				}
-				IO.get(path, {}, function(data) {
-					data = JSONX.decode(data);
-
+				var _query = function() {
+					var _filter = {};
+					if (Node.one('#title').val() != '') {
+						_filter.titleLike = Node.one('#title').val();
+					}
+					_filter.pageSize = frame.capacity;
+					IO.post(path, _filter, function(data) {
+						data = JSONX.decode(data);
+						_render(data);
+					}, 'text')
+				}
+				var _render = function(data) {
 					for (var i = 0; i < frame.capacity; i++) {
 						for (var j = 0; j < detail.length; j++) {
-							data.pageItems[i] == null ? dataTd[i][j].append('')
-									: dataTd[i][j].append(detail[j]
+							data.pageItems[i] == null ? dataTd[i][j].html('')
+									: dataTd[i][j].html(detail[j]
 											.handler(data.pageItems[i]))
 						}
 					}
-
 					demoPageNum.html(data.pageNo);
+				}
+				var _forward = function() {
+					var _filter = {};
+					_filter.pageNo = (parseInt(demoPageNum.text()) + 1);
+					if (Node.one('#title').val() != '') {
+						_filter.titleLike = Node.one('#title').val();
+					}
+					_filter.pageSize = frame.capacity;
+					IO.post(path, _filter, function(data) {
+						data = JSONX.decode(data);
+						_render(data);
+					}, 'text')
+				}
+				var _backward = function() {
+					var _filter = {};
+					_filter.pageNo = (parseInt(demoPageNum.text()) - 1);
+					if (Node.one('#title').val() != '') {
+						_filter.titleLike = Node.one('#title').val();
+					}
+					_filter.pageSize = frame.capacity;
+					IO.post(path, _filter, function(data) {
+						data = JSONX.decode(data);
+						_render(data);
+					}, 'text')
+				}
+
+				filter.pageSize = frame.capacity;
+				IO.post(path, filter, function(data) {
+					data = JSONX.decode(data);
+					_render(data);
 				}, 'text')
 
 				var demoPageNum = new Node('<span>').addClass(cssName + '-PN');
@@ -49,43 +90,15 @@ define(
 								demoPageForward);
 
 				EventDom.on(demoPageBackward, 'click', function(ev) {
-					IO.get('index/testDemo?_content=json', {
-						pageNo : parseInt(demoPageNum.text()) - 1
-					}, function(data) {
-						// console.log(data);
-						data = JSONX.decode(data);
-						data.pageItems[0] == null ? dataTd[0][0].html('')
-								: dataTd[0][0].html(data.pageItems[0].title);
-						data.pageItems[1] == null ? dataTd[1][0].html('')
-								: dataTd[1][0].html(data.pageItems[1].title);
-						data.pageItems[2] == null ? dataTd[2][0].html('')
-								: dataTd[2][0].html(data.pageItems[2].title);
-						data.pageItems[3] == null ? dataTd[3][0].html('')
-								: dataTd[3][0].html(data.pageItems[3].title);
-						data.pageItems[4] == null ? dataTd[4][0].html('')
-								: dataTd[4][0].html(data.pageItems[4].title);
-						demoPageNum.html(data.pageNo);
-					}, 'text')
+					_backward();
 				})
 
 				EventDom.on(demoPageForward, 'click', function(ev) {
-					IO.get('index/testDemo?_content=json', {
-						pageNo : parseInt(demoPageNum.text()) + 1
-					}, function(data) {
-						// console.log(data);
-						data = JSONX.decode(data);
-						data.pageItems[0] == null ? dataTd[0][0].html('')
-								: dataTd[0][0].html(data.pageItems[0].title);
-						data.pageItems[1] == null ? dataTd[1][0].html('')
-								: dataTd[1][0].html(data.pageItems[1].title);
-						data.pageItems[2] == null ? dataTd[2][0].html('')
-								: dataTd[2][0].html(data.pageItems[2].title);
-						data.pageItems[3] == null ? dataTd[3][0].html('')
-								: dataTd[3][0].html(data.pageItems[3].title);
-						data.pageItems[4] == null ? dataTd[4][0].html('')
-								: dataTd[4][0].html(data.pageItems[4].title);
-						demoPageNum.html(data.pageNo);
-					}, 'text')
+					_forward();
+				})
+
+				EventDom.on(queryButton, 'click', function(ev) {
+					_query();
 				})
 
 				var ret = {
@@ -94,6 +107,18 @@ define(
 					},
 					pageSpan : function() {
 						return demoTableDescribe;
+					},
+					queryButton : function() {
+						return queryButton;
+					},
+					query : function() {
+						_query();
+					},
+					forward : function() {
+						_forward();
+					},
+					backward : function() {
+						_backward();
 					}
 				};
 				return ret;
