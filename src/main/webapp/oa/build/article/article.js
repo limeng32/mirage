@@ -3,9 +3,9 @@ define(
 		[ "node", "./article-view", 'button', 'io', 'json', 'menu',
 				'separator', 'util', 'bee-demo/buttonPlus', 'event-dom',
 				'mypkg/jsonx', "kg/xtemplate/4.2.0/runtime",
-				'bee-demo/dataFrame' ],
+				'bee-demo/dataFrame', 'bee-demo/dataFilter' ],
 		function(require, exports, module) {
-			var $ = require('node').all, Node = require('node'), Util = require('util'), Menu = require('menu'), Separator = require('separator'), IO = require('io'), JSON = require('json'), BP = require('bee-demo/buttonPlus'), JSONX = require('mypkg/jsonx'), EventDom = require('event-dom'), XTemplate = require("kg/xtemplate/4.2.0/runtime"), DataFrame = require('bee-demo/dataFrame');
+			var $ = require('node').all, Node = require('node'), Util = require('util'), Menu = require('menu'), Separator = require('separator'), IO = require('io'), JSON = require('json'), BP = require('bee-demo/buttonPlus'), JSONX = require('mypkg/jsonx'), EventDom = require('event-dom'), XTemplate = require("kg/xtemplate/4.2.0/runtime"), DataFrame = require('bee-demo/dataFrame'), DataFilter = require('bee-demo/dataFilter');
 			module.exports = {
 				init : function() {
 					var BG = new Node('<div>').addClass('middleBanner');
@@ -148,17 +148,22 @@ define(
 						}
 						return sb;
 					}
-					var dataFilter = new Node('<div>').append(new Node(
+					var titleFilter = new Node('<div>').append(new Node(
 							'<input>').prop({
 						id : 'title'
 					}));
-					$('article').append(dataFilter);
-					var filter = {};
-					if ($('#title').val() != '') {
-						filter.title = $('#title').val();
-					}
+					$('article').append(titleFilter);
+					var dataFilter = DataFilter.init();
+					dataFilter.add({
+						id : 'titleLike',
+						node : Node.one('#title'),
+						handler : function(n) {
+							return Node.one('#title').val() == '' ? null : Node
+									.one('#title').val();
+						}
+					});
 					var dataFrame = DataFrame.init(
-							'index/testDemo?_content=json', filter, {
+							'index/testDemo?_content=json', dataFilter, {
 								capacity : 2,
 								detail : [ {
 									title : '标题',

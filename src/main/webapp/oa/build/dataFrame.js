@@ -3,7 +3,7 @@ define(
 		[ 'event-dom', 'util', 'mypkg/jsonx', 'io', 'node' ],
 		function(require, exports, module) {
 			var EventDom = require('event-dom'), Util = require('util'), IO = require('io'), Node = require('node'), JSONX = require('mypkg/jsonx');
-			exports.init = function(path, filter, frame, cssName) {
+			exports.init = function(path, dataFilter, frame, cssName) {
 				var detail = frame.detail;
 				var demoTable = new Node('<table>').addClass(cssName);
 				var queryButton = new Node('<div>').unselectable().addClass(
@@ -72,9 +72,8 @@ define(
 						_render(data);
 					}, 'text')
 				}
-
-				filter.pageSize = frame.capacity;
-				IO.post(path, filter, function(data) {
+				dataFilter.filter().pageSize = frame.capacity;
+				IO.post(path, dataFilter.filter(), function(data) {
 					data = JSONX.decode(data);
 					_render(data);
 				}, 'text')
@@ -101,7 +100,7 @@ define(
 					_query();
 				})
 
-				var ret = {
+				var _ret = {
 					dataTable : function() {
 						return demoTable;
 					},
@@ -121,6 +120,6 @@ define(
 						_backward();
 					}
 				};
-				return ret;
+				return _ret;
 			}
 		});
