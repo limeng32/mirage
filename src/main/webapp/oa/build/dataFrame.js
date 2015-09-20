@@ -2,7 +2,7 @@ define(
 		'bee-demo/dataFrame',
 		[ 'event-dom', 'util', 'mypkg/jsonx', 'io', 'node' ],
 		function(require, exports, module) {
-			var EventDom = require('event-dom'), Util = require('util'), IO = require('io'), Node = require('node'), JSONX = require('mypkg/jsonx');
+			var EventDom = require('event-dom'), IO = require('io'), Node = require('node'), JSONX = require('mypkg/jsonx');
 			exports.init = function(path, dataFilter, frame, cssName) {
 				var detail = frame.detail;
 				var demoTable = new Node('<table>').addClass(cssName);
@@ -28,55 +28,57 @@ define(
 					}
 				}
 				var _query = function() {
-					var _filter = {};
-					if (Node.one('#title').val() != '') {
-						_filter.titleLike = Node.one('#title').val();
-					}
-					_filter.pageSize = frame.capacity;
-					IO.post(path, _filter, function(data) {
+					IO.post(path, dataFilter.filter({
+						pageSize : frame.capacity
+					}), function(data) {
 						data = JSONX.decode(data);
 						_render(data);
-					}, 'text')
-				}
+					}, 'text');
+				};
 				var _render = function(data) {
 					for (var i = 0; i < frame.capacity; i++) {
 						for (var j = 0; j < detail.length; j++) {
 							data.pageItems[i] == null ? dataTd[i][j].html('')
 									: dataTd[i][j].html(detail[j]
-											.handler(data.pageItems[i]))
+											.handler(data.pageItems[i]));
 						}
 					}
 					demoPageNum.html(data.pageNo);
-				}
+					pageMaxSpan.html(data.maxPageNum);
+				};
 				var _forward = function() {
-					var _filter = {};
-					_filter.pageNo = (parseInt(demoPageNum.text()) + 1);
-					if (Node.one('#title').val() != '') {
-						_filter.titleLike = Node.one('#title').val();
-					}
-					_filter.pageSize = frame.capacity;
-					IO.post(path, _filter, function(data) {
-						data = JSONX.decode(data);
-						_render(data);
-					}, 'text')
-				}
+					IO
+							.post(
+									path,
+									dataFilter
+											.filter({
+												pageSize : frame.capacity,
+												pageNo : parseInt(demoPageNum
+														.text()) < parseInt(pageMaxSpan
+														.text()) ? parseInt(demoPageNum
+														.text()) + 1
+														: parseInt(pageMaxSpan
+																.text())
+											}), function(data) {
+										data = JSONX.decode(data);
+										_render(data);
+									}, 'text');
+				};
 				var _backward = function() {
-					var _filter = {};
-					_filter.pageNo = (parseInt(demoPageNum.text()) - 1);
-					if (Node.one('#title').val() != '') {
-						_filter.titleLike = Node.one('#title').val();
-					}
-					_filter.pageSize = frame.capacity;
-					IO.post(path, _filter, function(data) {
+					IO.post(path, dataFilter.filter({
+						pageSize : frame.capacity,
+						pageNo : parseInt(demoPageNum.text()) - 1
+					}), function(data) {
 						data = JSONX.decode(data);
 						_render(data);
-					}, 'text')
-				}
-				dataFilter.filter().pageSize = frame.capacity;
-				IO.post(path, dataFilter.filter(), function(data) {
+					}, 'text');
+				};
+				IO.post(path, dataFilter.filter({
+					pageSize : frame.capacity
+				}), function(data) {
 					data = JSONX.decode(data);
 					_render(data);
-				}, 'text')
+				}, 'text');
 
 				var demoPageNum = new Node('<span>').addClass(cssName + '-PN');
 				var demoPageBackward = new Node('<span>').addClass(
@@ -87,18 +89,19 @@ define(
 						cssName + '-PSpan').append(demoPageBackward)
 						.append("第").append(demoPageNum).append("页").append(
 								demoPageForward);
+				var pageMaxSpan = new Node('<span>').addClass(cssName + '-PM');
 
 				EventDom.on(demoPageBackward, 'click', function(ev) {
 					_backward();
-				})
+				});
 
 				EventDom.on(demoPageForward, 'click', function(ev) {
 					_forward();
-				})
+				});
 
 				EventDom.on(queryButton, 'click', function(ev) {
 					_query();
-				})
+				});
 
 				var _ret = {
 					dataTable : function() {
@@ -109,6 +112,9 @@ define(
 					},
 					queryButton : function() {
 						return queryButton;
+					},
+					pageMaxSpan : function() {
+						return pageMaxSpan;
 					},
 					query : function() {
 						_query();
@@ -121,5 +127,5 @@ define(
 					}
 				};
 				return _ret;
-			}
+			};
 		});

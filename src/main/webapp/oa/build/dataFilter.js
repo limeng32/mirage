@@ -1,27 +1,34 @@
-define(
-		'bee-demo/dataFilter',
-		[ 'event-dom', 'util', 'mypkg/jsonx', 'io', 'node' ],
-		function(require, exports, module) {
-			var EventDom = require('event-dom'), Util = require('util'), IO = require('io'), Node = require('node'), JSONX = require('mypkg/jsonx');
-			exports.init = function() {
-				var ret = {};
-				var _filter = function() {
-					return ret;
-				}
-				var _add = function(condition) {
-					var _temp = condition.handler(condition.node);
-					if (_temp != null) {
-						ret[condition.id] = condition.handler(condition.node);
-					}
-				}
-				var _ret = {
-					filter : function() {
-						return _filter();
-					},
-					add : function(condition) {
-						_add(condition);
-					}
-				};
-				return _ret;
+define('bee-demo/dataFilter', [], function(require, exports, module) {
+	exports.init = function() {
+		var conditionArray = new Array();
+		var _filter = function(p) {
+			var ret = {};
+			if (p.pageSize != null) {
+				ret.pageSize = p.pageSize;
 			}
-		});
+			if (p.pageNo != null) {
+				ret.pageNo = p.pageNo;
+			}
+			for (var i = 0; i < conditionArray.length; i++) {
+				var _temp = conditionArray[i].handler(conditionArray[i].node);
+				if (_temp != null) {
+					ret[conditionArray[i].id] = _temp;
+				}
+			}
+			return ret;
+		};
+		var _add = function(condition) {
+			conditionArray.push(condition);
+		};
+		var _ret = {
+			filter : function(p) {
+				return _filter(p);
+			},
+			add : function(condition) {
+				_add(condition);
+				return this;
+			}
+		};
+		return _ret;
+	};
+});

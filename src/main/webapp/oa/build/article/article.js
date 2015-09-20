@@ -5,7 +5,7 @@ define(
 				'mypkg/jsonx', "kg/xtemplate/4.2.0/runtime",
 				'bee-demo/dataFrame', 'bee-demo/dataFilter' ],
 		function(require, exports, module) {
-			var $ = require('node').all, Node = require('node'), Util = require('util'), Menu = require('menu'), Separator = require('separator'), IO = require('io'), JSON = require('json'), BP = require('bee-demo/buttonPlus'), JSONX = require('mypkg/jsonx'), EventDom = require('event-dom'), XTemplate = require("kg/xtemplate/4.2.0/runtime"), DataFrame = require('bee-demo/dataFrame'), DataFilter = require('bee-demo/dataFilter');
+			var $ = require('node').all, Node = require('node'), Util = require('util'), Menu = require('menu'), IO = require('io'), BP = require('bee-demo/buttonPlus'), DataFrame = require('bee-demo/dataFrame'), DataFilter = require('bee-demo/dataFilter');
 			module.exports = {
 				init : function() {
 					var BG = new Node('<div>').addClass('middleBanner');
@@ -147,38 +147,59 @@ define(
 							sb.addChild(item);
 						}
 						return sb;
-					}
+					};
 					var titleFilter = new Node('<div>').append(new Node(
 							'<input>').prop({
 						id : 'title'
 					}));
-					$('article').append(titleFilter);
+					var originFilter = new Node('<div>').append(new Node(
+							'<input>').prop({
+						id : 'origin'
+					}));
+					$('article').append('标题：').append(titleFilter)
+							.append('别名：').append(originFilter);
 					var dataFilter = DataFilter.init();
 					dataFilter.add({
 						id : 'titleLike',
 						node : Node.one('#title'),
 						handler : function(n) {
-							return Node.one('#title').val() == '' ? null : Node
-									.one('#title').val();
+							return n.val() == '' ? null : n.val();
+						}
+					}).add({
+						id : 'origin',
+						node : Node.one('#origin'),
+						handler : function(n) {
+							return n.val() == '' ? null : n.val();
 						}
 					});
 					var dataFrame = DataFrame.init(
 							'index/testDemo?_content=json', dataFilter, {
 								capacity : 2,
-								detail : [ {
-									title : '标题',
-									handler : function(n) {
-										return n.title;
-									}
-								}, {
-									title : 'ID',
-									handler : function(n) {
-										return n.id;
-									}
-								} ]
+								detail : [
+										{
+											title : '标题',
+											handler : function(n) {
+												return n.title;
+											}
+										},
+										{
+											title : 'ID',
+											handler : function(n) {
+												return n.id;
+											}
+										},
+										{
+											title : '别名',
+											handler : function(n) {
+												return n.origin == null ? ''
+														: n.origin;
+											}
+										} ]
 							}, 'ks-dataFrame');
 					$('article').append(dataFrame.dataTable());
 					$('article').append(dataFrame.pageSpan());
+					$('article').append('共').append(dataFrame.pageMaxSpan())
+							.append('页');
 					$('article').append(
 							dataFrame.queryButton().text('查询').addClass(
 									'ks-button').addClass('ks-button-mini')
@@ -186,5 +207,5 @@ define(
 										src : 'image/arrowDownUnuse.png'
 									}).addClass('oa-sorter-arrow')));
 				}
-			}
+			};
 		});

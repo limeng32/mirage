@@ -27,6 +27,9 @@ public class Article extends PojoSupport<Article> implements Serializable {
 	@FieldMapperAnnotation(dbFieldName = ArticleCondition.field_title, jdbcType = JdbcType.VARCHAR)
 	private String title;
 
+	@FieldMapperAnnotation(dbFieldName = "alias", jdbcType = JdbcType.VARCHAR)
+	private String origin;
+
 	@FieldMapperAnnotation(dbFieldName = ArticleCondition.field_content, jdbcType = JdbcType.LONGVARCHAR)
 	private String content;
 
@@ -82,6 +85,14 @@ public class Article extends PojoSupport<Article> implements Serializable {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
 	}
 
 	@PersistentFlagAnnotation
