@@ -5,6 +5,7 @@ import java.util.List;
 import limeng32.mirage.core.page.Page;
 import limeng32.mirage.core.page.PageParam;
 import limeng32.mirage.core.pojo.Book;
+import limeng32.mirage.core.pojo.BookWriter;
 import limeng32.mirage.core.pojo.condition.BookCondition;
 import limeng32.mirage.core.service.BookService;
 import limeng32.mirage.core.service.WriterService;
@@ -35,6 +36,9 @@ public class TestController2 {
 		int pageNo = pageParam.getPageNo() > 0 ? pageParam.getPageNo() : 1;
 		bc.setLimiter(new PageParam(pageNo, pageParam.getPageSize()));
 		List<Book> ret = bookService.selectAll(bc);
+		for (Book book : ret) {
+			bookService.loadBookWriter(book, new BookWriter());
+		}
 		Page<Book> page = new Page<>(ret, bc.getLimiter());
 		mm.addAttribute("_content", page);
 		return "testController1";

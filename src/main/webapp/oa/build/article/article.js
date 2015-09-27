@@ -172,30 +172,40 @@ define(
 							return n.val() == '' ? null : n.val();
 						}
 					});
-					var dataFrame = DataFrame.init(
-							'index/testDemo?_content=json', dataFilter, {
-								capacity : 2,
-								detail : [
-										{
-											title : '标题',
-											handler : function(n) {
-												return n.title;
-											}
-										},
-										{
-											title : 'ID',
-											handler : function(n) {
-												return n.id;
-											}
-										},
-										{
-											title : '别名',
-											handler : function(n) {
-												return n.origin == null ? ''
-														: n.origin;
-											}
-										} ]
-							}, 'ks-dataFrame');
+					var dataFrame = DataFrame
+							.init(
+									'index/testDemo?_content=json',
+									dataFilter,
+									{
+										capacity : 2,
+										detail : [
+												{
+													title : '标题',
+													handler : function(n) {
+														return n.title;
+													}
+												},
+												{
+													title : 'ID',
+													handler : function(n) {
+														return n.id;
+													}
+												},
+												{
+													title : '别名',
+													handler : function(n) {
+														return n.origin == null ? ''
+																: n.origin;
+													}
+												},
+												{
+													title : '第一作者',
+													handler : function(n) {
+														return n.bookWriter[0] == null ? ''
+																: n.bookWriter[0].writer.name;
+													}
+												} ]
+									}, 'ks-dataFrame');
 					$('article').append(dataFrame.dataTable());
 					$('article').append(dataFrame.pageSpan());
 					$('article').append('共').append(dataFrame.pageMaxSpan())
