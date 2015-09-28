@@ -11,10 +11,11 @@
         KISSY.config({
             packages: [
                 {
-                	name: 'gulp',
+                	name: 'mirageFront',
                     //请修改线上包路径
                     base: 'gulp/build',
                     ignorePackageNameInUri: true,
+                    tag: "201509282009",
                     combine:false
                 }
             ]}
@@ -24,7 +25,11 @@
 
     <!--引入样式-->
     <script>
-        KISSY.importStyle('gulp/index.css');
+        KISSY.importStyle('mirageFront/index.css');
+        KISSY.importStyle('mirageFront/base.css');
+        KISSY.importStyle('mirageFront/menu.css');
+        KISSY.importStyle('mirageFront/menuitem.css');
+        KISSY.importStyle('mirageFront/submenu.css');
     </script>
 </head>
 <body>
@@ -35,7 +40,7 @@
 
 <!--初始化脚本-->
 <script>
-    KISSY.use('gulp/index');
+    KISSY.use('mirageFront/index');
 </script>
 
 </body>
